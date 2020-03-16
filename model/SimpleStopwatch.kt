@@ -24,21 +24,13 @@ class SimpleStopwatch(private val listener: (time: Long) -> Unit) {
     }
 
     private fun setupStopwatch(): Observable<Long> {
-        return Observable.interval(1, TimeUnit.MILLISECONDS)
+        return Observable.interval(10, TimeUnit.MILLISECONDS)
             .flatMap {
                 return@flatMap Observable.create<Long> {
-                    it.onNext(time)
+                    it.onNext(time*10)
                     time++
                 }
             }
-//        return Observable.create{subscriber ->
-//            while (isStarted){
-//                time++
-//                Thread.sleep(1)
-//                subscriber.onNext(time)
-//            }
-//            subscriber.onComplete()
-//        }
     }
 
     @Synchronized
