@@ -1,9 +1,7 @@
 package com.optimus.simplestopwatch.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.optimus.simplestopwatch.R
 import com.optimus.simplestopwatch.model.SimpleStopwatch
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,6 +10,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+        private lateinit var stopwatch: SimpleStopwatch
+
         override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,13 +19,12 @@ class MainActivity : AppCompatActivity() {
         var isStarted = false
         val date = Date()
         val dateFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.ROOT)
+            dateFormat.timeZone = TimeZone.getTimeZone("Europe")
 
-        val stopwatch = object : SimpleStopwatch(){
-            override fun onTick(time: Long) {
+        stopwatch = SimpleStopwatch{ time ->
                 date.time = time
                 val currentTime = dateFormat.format(date)
                 text_view.text = currentTime
-            }
         }
 
         button.setOnClickListener {
@@ -42,11 +41,12 @@ class MainActivity : AppCompatActivity() {
         button2.setOnClickListener {
             text_view.text = "00:00:00.000"
             stopwatch.reset()
+            isStarted = false
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
+        stopwatch.reset()
     }
 }
